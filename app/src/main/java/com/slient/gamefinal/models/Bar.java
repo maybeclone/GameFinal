@@ -24,7 +24,7 @@ public class Bar {
 
     private Rect rect;
 
-    public Bar(float y, int width, int height, int index) {
+    public Bar(int y, int width, int height, int index) {
         this.index = index;
         isPassed = false;
         speed = 1600;
@@ -32,7 +32,7 @@ public class Bar {
         this.width = width;
         this.height = height;
         int gameW = MainActivity.GAME_WIDTH;
-        this.x = gameW + RandomNumberGenerator.getRandIntBetween(index * gameW / 3, (index + 1) * gameW / 3);
+        this.y = gameW + RandomNumberGenerator.getRandIntBetween(index * gameW / 3, (index + 1) * gameW / 3);
 
         this.rect = new Rect((int)x, (int)y, (int)x + width, (int)y + height);
         this.bar = Assets.barImpedimentBackground;

@@ -59,7 +59,7 @@ public class Assets {
         List<Bitmap> bitmapCharacterJump = splitBitmapFromSpriteMap("character_sprite.png", true, 8);
         List<Frame> frameList = new ArrayList<>();
         for(Bitmap b : bitmapCharacterJump){
-            frameList.add(new Frame(b, 0.05));
+            frameList.add(new Frame(b, 0.15));
         }
         characterJumpAnimation = new LoopingAnimation(true, frameList);
         Assets.menuBackground = Assets.loadBitmap("menu_background.jpg", true);

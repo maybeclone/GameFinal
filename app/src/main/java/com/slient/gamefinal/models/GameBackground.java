@@ -14,20 +14,20 @@ public class GameBackground {
     private int width;
     private int height;
     private boolean reversedFirst;
-    public static final float speed = 1600;
+    public static final float speed = 1000;
 
-    private int xClip;
+    private int yClip;
 
     public GameBackground(int screenWidth, int screenHeight){
         background = Assets.mainGameBackground;
         reversedFirst = false;
 
-        xClip = 0;
-
         // Create the bitmap
         background = Bitmap.createScaledBitmap(background, screenWidth,
                 screenHeight
                 , true);
+
+        yClip = background.getHeight();
 
         // Save the width and height for later use
         width = background.getWidth();
@@ -40,13 +40,12 @@ public class GameBackground {
     }
 
     public void update(double delta){
-        xClip -= speed / GameView.FPS;
-
-        if (xClip >= width) {
-            xClip = 0;
+        yClip += speed / GameView.FPS;
+        if (yClip >= height) {
+            yClip = 0;
             reversedFirst = !reversedFirst;
-        } else if (xClip <= 0) {
-            xClip = width;
+        } else if (yClip <= 0) {
+            yClip = height;
             reversedFirst = !reversedFirst;
         }
     }
@@ -69,8 +68,8 @@ public class GameBackground {
         return speed;
     }
 
-    public int getxClip() {
-        return xClip;
+    public int getyClip() {
+        return yClip;
     }
 
     public Bitmap getBackground() {

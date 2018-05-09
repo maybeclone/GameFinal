@@ -12,7 +12,6 @@ import com.slient.gamefinal.utils.Painter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by silent on 5/8/2018.
@@ -56,7 +55,7 @@ public class PlayState extends State {
             bar.render(g);
         }
 
-        Assets.characterJumpAnimation.render(g, (int)player.getX(), (int) player.getY());
+//        Assets.characterJumpAnimation.render(g, (int)player.getX(), (int) player.getY());
 
     }
 
@@ -68,12 +67,13 @@ public class PlayState extends State {
     }
 
     private void drawBackground(Painter g) {
-        Rect fromRect1 = new Rect(0, 0, gameBackground.getWidth() - gameBackground.getxClip(), gameBackground.getHeight());
-        Rect toRect1 = new Rect(gameBackground.getxClip(), 0, gameBackground.getWidth(), MainActivity.GAME_HEIGHT);
+
+        Rect fromRect1 = new Rect(0, 0, gameBackground.getWidth(), gameBackground.getHeight() - gameBackground.getyClip());
+        Rect toRect1 = new Rect(0, gameBackground.getyClip(), MainActivity.GAME_WIDTH, gameBackground.getHeight());
 
         // For the reversed background
-        Rect fromRect2 = new Rect(gameBackground.getWidth() - gameBackground.getxClip(), 0, gameBackground.getWidth(), gameBackground.getHeight());
-        Rect toRect2 = new Rect(0, 0, gameBackground.getxClip(), MainActivity.GAME_HEIGHT);
+        Rect fromRect2 = new Rect(0, gameBackground.getHeight() - gameBackground.getyClip(), gameBackground.getWidth(), gameBackground.getHeight());
+        Rect toRect2 = new Rect(0, 0, MainActivity.GAME_WIDTH, gameBackground.getyClip());
 
         //draw the two background bitmaps
         if (!gameBackground.isReversedFirst()) {
