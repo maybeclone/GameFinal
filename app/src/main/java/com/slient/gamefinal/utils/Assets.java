@@ -30,6 +30,8 @@ public class Assets {
 
     private static SoundPool soundPool;
 
+    public static List<Bitmap> bitmapCharacterJump;
+
     public static Bitmap menuBackground;
     public static Bitmap mainGameBackground;
     public static Bitmap barImpedimentBackground;
@@ -56,7 +58,7 @@ public class Assets {
 
     public static void loadResource(){
 
-        List<Bitmap> bitmapCharacterJump = splitBitmapFromSpriteMap("character_sprite.png", true, 8);
+        bitmapCharacterJump = splitBitmapFromSpriteMap("character_sprite.png", true, 8);
         List<Frame> frameList = new ArrayList<>();
         for(Bitmap b : bitmapCharacterJump){
             frameList.add(new Frame(b, 0.15));

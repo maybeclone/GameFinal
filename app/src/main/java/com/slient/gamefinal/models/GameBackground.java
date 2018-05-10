@@ -5,6 +5,7 @@ import android.graphics.Matrix;
 
 import com.slient.gamefinal.main.GameView;
 import com.slient.gamefinal.utils.Assets;
+import com.slient.gamefinal.utils.Config;
 
 public class GameBackground {
 
@@ -14,7 +15,6 @@ public class GameBackground {
     private int width;
     private int height;
     private boolean reversedFirst;
-    public static final float speed = 1000;
 
     private int yClip;
 
@@ -40,7 +40,7 @@ public class GameBackground {
     }
 
     public void update(double delta){
-        yClip += speed / GameView.FPS;
+        yClip += Config.SPEED / GameView.FPS;
         if (yClip >= height) {
             yClip = 0;
             reversedFirst = !reversedFirst;
@@ -64,9 +64,6 @@ public class GameBackground {
         return reversedFirst;
     }
 
-    public float getSpeed() {
-        return speed;
-    }
 
     public int getyClip() {
         return yClip;

@@ -8,7 +8,6 @@ public class Player {
     private int width, height, velY;
     private Rect rect;
     private float yGround;
-    private int pressedCount;
 
     private boolean isAlive;
     private boolean isDucked;
@@ -27,13 +26,12 @@ public class Player {
 
         rect = new Rect((int) x, (int) y, (int) (x + width), (int) (y + height));
         yGround = y + height;
-        pressedCount = 0;
     }
 
     public void update(float delta) {
+        jump();
         if (isGrounded()) {
             velY = 0;
-            pressedCount = 0;
         } else {
             velY += ACCEL_GRAVITY * delta;
         }
@@ -46,28 +44,9 @@ public class Player {
         if (isGrounded()) {
             y -= 300;
             velY = JUMP_VELOCITY;
-            pressedCount++;
-        } else if (pressedCount <= 2) {
-            y -= 100;
-            velY += JUMP_VELOCITY / 3;
-            pressedCount++;
         }
     }
 
-    public void duck() {
-        if (!isGrounded()) {
-            isDucked = true;
-        }
-    }
-
-    public void pushBack(int dx) {
-        x -= dx;
-
-        if (x < width / 2) {
-            isAlive = false;
-            rect.set((int) x, (int) y, (int) x + width, (int) y + height);
-        }
-    }
 
     public void onTouch(MotionEvent e, int scaledX, int scaledY) {
         if (e.getAction() == MotionEvent.ACTION_DOWN) {

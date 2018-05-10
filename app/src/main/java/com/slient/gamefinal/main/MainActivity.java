@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.slient.gamefinal.R;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         assets = getAssets();
         sGame = new GameView(this, GAME_WIDTH, GAME_HEIGHT);
         setContentView(sGame);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     }
 

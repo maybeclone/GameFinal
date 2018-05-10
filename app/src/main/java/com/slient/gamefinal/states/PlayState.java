@@ -1,10 +1,12 @@
 package com.slient.gamefinal.states;
 
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.slient.gamefinal.main.MainActivity;
 import com.slient.gamefinal.models.Bar;
+import com.slient.gamefinal.models.Character;
 import com.slient.gamefinal.models.GameBackground;
 import com.slient.gamefinal.models.Player;
 import com.slient.gamefinal.utils.Assets;
@@ -23,27 +25,39 @@ public class PlayState extends State {
     private Player player;
     private GameBackground gameBackground;
 
+    private Character character;
+
     @Override
     public void init() {
         score = 0;
         bars = new ArrayList<>();
-        player = new Player(500, 500, 700, 500);
-        for(int i=0; i<10; i++){
-            Bar bar = new Bar(760, 200, 200, i);
+        for (int i = 0; i < 7; i++) {
+            Bar bar = new Bar(500, 50, i);
             bars.add(bar);
         }
+        Log.d("TRUNG", bars.get(0).getX() + ", " + bars.get(0).getY());
+        Bar barTemp = bars.get(bars.size() - 1);
+        character = new Character(Assets.bitmapCharacterJump, barTemp.getX() + barTemp.getWidth() / 2, barTemp.getY());
         gameBackground = new GameBackground(MainActivity.GAME_WIDTH, MainActivity.GAME_HEIGHT);
     }
 
     @Override
     public void update(float delta) {
-        gameBackground.update(delta);
-        Assets.characterJumpAnimation.update(delta);
-        player.update(delta);
+        switch (character.update(delta, bars)){
+            case INSPACE:
 
-        for (Bar bar : bars) {
-            bar.update(delta);
+                break;
+            case INTERSECT:
+                for (Bar bar : bars) {
+                    bar.update(delta);
+                }
+                gameBackground.update(delta);
+                break;
+            case DIE:
+                setCurrentState(new GameOverState(0));
+                break;
         }
+
 
     }
 
@@ -54,7 +68,7 @@ public class PlayState extends State {
         for (Bar bar : bars) {
             bar.render(g);
         }
-
+        character.render(g);
 //        Assets.characterJumpAnimation.render(g, (int)player.getX(), (int) player.getY());
 
     }
@@ -62,8 +76,7 @@ public class PlayState extends State {
 
     @Override
     public boolean onTouch(MotionEvent e, int scaledX, int scaledY) {
-        player.onTouch(e, scaledX, scaledY);
-        return true; //This needs to be set to true if there is touch input
+        return false; //This needs to be set to true if there is touch input
     }
 
     private void drawBackground(Painter g) {
