@@ -8,6 +8,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.slient.gamefinal.states.LoadMenuState;
+import com.slient.gamefinal.states.PauseState;
 import com.slient.gamefinal.states.State;
 import com.slient.gamefinal.utils.InputHandler;
 import com.slient.gamefinal.utils.Painter;
@@ -15,7 +16,7 @@ import com.slient.gamefinal.utils.Painter;
 /**
  * Created by silent on 5/8/2018.
  */
-public class GameView extends SurfaceView implements Runnable  {
+public class GameView extends SurfaceView implements Runnable {
 
     public static int FPS = 60;
 
@@ -28,6 +29,7 @@ public class GameView extends SurfaceView implements Runnable  {
     private Thread gameThread;
     private volatile boolean running = false;
     private volatile State currentState;
+    private volatile State previousState;
 
     private InputHandler inputHandler;
 
@@ -44,7 +46,7 @@ public class GameView extends SurfaceView implements Runnable  {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 initInput();
-                if(currentState == null) {
+                if (currentState == null) {
                     setCurrentState(new LoadMenuState());
                 }
                 initGame();
@@ -74,7 +76,7 @@ public class GameView extends SurfaceView implements Runnable  {
     }
 
     private void initInput() {
-        if(inputHandler == null) {
+        if (inputHandler == null) {
             inputHandler = new InputHandler();
         }
         setOnTouchListener(inputHandler);
@@ -86,7 +88,7 @@ public class GameView extends SurfaceView implements Runnable  {
         long sleepDurationMillis = 0;
 
         //Game loop
-        while(running) {
+        while (running) {
             long beforeUpdateRender = System.nanoTime();
             long deltaMillis = sleepDurationMillis + updateDurationMillis;
             updateAndRender(deltaMillis);
@@ -146,6 +148,22 @@ public class GameView extends SurfaceView implements Runnable  {
             screen.getClipBounds(gameImageDst);
             screen.drawBitmap(gameImage, gameImageSrc, gameImageDst, null);
             getHolder().unlockCanvasAndPost(screen);
+        }
+    }
+
+    public void setPause() {
+        System.gc();
+        PauseState pauseState = new PauseState();
+        pauseState.init();
+        previousState = currentState;
+        currentState = pauseState;
+        inputHandler.setCurrentState(currentState);
+    }
+
+    public void setResume() {
+        if (previousState != null) {
+            currentState = previousState;
+            inputHandler.setCurrentState(currentState);
         }
     }
 

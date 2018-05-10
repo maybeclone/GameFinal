@@ -5,6 +5,6 @@ package com.slient.gamefinal.utils;
  */
 public class Config {
 
-    public static int SPEED = 500;
+    public static int SPEED = 750;
 
 }

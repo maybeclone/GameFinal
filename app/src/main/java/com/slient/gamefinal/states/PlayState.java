@@ -13,6 +13,7 @@ import com.slient.gamefinal.models.Bar;
 import com.slient.gamefinal.models.Character;
 import com.slient.gamefinal.models.GameBackground;
 import com.slient.gamefinal.models.Player;
+import com.slient.gamefinal.ui.UIButton;
 import com.slient.gamefinal.ui.UILabel;
 import com.slient.gamefinal.utils.Assets;
 import com.slient.gamefinal.utils.Painter;
@@ -32,8 +33,11 @@ public class PlayState extends State implements SensorEventListener {
     private Player player;
     private GameBackground gameBackground;
     private UILabel scoreLabel;
+    private UIButton pauseButton;
 
     private Character character;
+
+    private boolean isRegister;
 
     @Override
     public void init() {
@@ -43,17 +47,23 @@ public class PlayState extends State implements SensorEventListener {
             Bar bar = new Bar(500, 50, i);
             bars.add(bar);
         }
+        isRegister = false;
         Bar barTemp = bars.get(bars.size() - 1);
         barTemp.setPassed(true);
-        character = new Character(Assets.bitmapCharacterJump, barTemp.getX() + barTemp.getWidth() / 2, barTemp.getY()-300);
+        character = new Character(Assets.bitmapCharacterJump, barTemp.getX() + barTemp.getWidth() / 2, barTemp.getY() - 300);
         gameBackground = new GameBackground(MainActivity.GAME_WIDTH, MainActivity.GAME_HEIGHT);
-        MainActivity.mSensorManager.registerListener(this, MainActivity.mSensor, SensorManager.SENSOR_DELAY_GAME);
-        scoreLabel = new UILabel(score+"", MainActivity.GAME_WIDTH / 2 - 6, 100);
+
+        scoreLabel = new UILabel(score + "", MainActivity.GAME_WIDTH / 2 - 6, 100);
+        pauseButton = new UIButton(1650, 20, 1900, 120, Assets.pauseBackground);
     }
 
     @Override
     public void update(float delta) {
-        switch (character.update(delta, bars)){
+        if(!isRegister){
+            registerSensor();
+            isRegister = true;
+        }
+        switch (character.update(delta, bars)) {
             case INTERSECT:
                 score++;
             case INSPACE:
@@ -63,10 +73,10 @@ public class PlayState extends State implements SensorEventListener {
                 gameBackground.update(delta);
                 break;
             case DIE:
-                setCurrentState(new GameOverState(0));
+                setCurrentState(new GameOverState(score));
                 break;
         }
-        scoreLabel.setText(score+"");
+        scoreLabel.setText(score + "");
 
     }
 
@@ -78,13 +88,23 @@ public class PlayState extends State implements SensorEventListener {
         }
         character.render(g);
         scoreLabel.render(g);
-
+        pauseButton.render(g, false);
     }
 
 
     @Override
     public boolean onTouch(MotionEvent e, int scaledX, int scaledY) {
-        return false; //This needs to be set to true if there is touch input
+        if (e.getAction() == MotionEvent.ACTION_DOWN) {
+            pauseButton.onTouchDown(scaledX, scaledY);
+        }
+
+        if (e.getAction() == MotionEvent.ACTION_UP) {
+            if (pauseButton.isPressed(scaledX, scaledY)) {
+                pauseButton.cancel();
+                setPauseGame();
+            }
+        }
+        return true; //This needs to be set to true if there is touch input
     }
 
     private void drawBackground(Painter g) {
@@ -125,5 +145,20 @@ public class PlayState extends State implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    @Override
+    public void setPauseGame() {
+        super.setPauseGame();
+        unregisterSensor();
+        isRegister = false;
+    }
+
+    public void registerSensor() {
+        MainActivity.mSensorManager.registerListener(this, MainActivity.mSensor, SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    public void unregisterSensor() {
+        MainActivity.mSensorManager.unregisterListener(this);
     }
 }

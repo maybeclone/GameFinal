@@ -37,13 +37,16 @@ public class Character {
                 (int) y + actionJump.get(0).getWidth());
     }
 
+    private Bar previousBar;
+
     public CharacterStatus update(float delta, List<Bar> bars) {
         if (checkStandBar(bars)) {
             currentBitmapIndex = 0;
-            y -= 100;
+            y -= 70;
             velY = JUMP_VELOCITY;
             updateRect();
-            if(!nowBar.isPassed()) {
+            if(!nowBar.isPassed() && !nowBar.equals(previousBar)) {
+                previousBar = nowBar;
                 return CharacterStatus.INTERSECT;
             }
             nowBar.setPassed(true);

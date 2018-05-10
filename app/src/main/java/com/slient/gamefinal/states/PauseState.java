@@ -4,29 +4,22 @@ import android.view.MotionEvent;
 
 import com.slient.gamefinal.main.MainActivity;
 import com.slient.gamefinal.ui.UIButton;
-import com.slient.gamefinal.ui.UILabel;
 import com.slient.gamefinal.utils.Assets;
 import com.slient.gamefinal.utils.Painter;
 
-/**
- * Created by silent on 5/8/2018.
- */
-public class GameOverState extends State {
-
-    private String playerScore;
-
+public class PauseState extends State {
+    private UIButton continueButton;
     private UIButton restartButton;
     private UIButton mainButton;
-    private UILabel scoreLabel;
-
-    public GameOverState(int playerScore) {
-        this.playerScore = "" + playerScore;
-    }
 
     @Override
     public void init() {
-        scoreLabel = new UILabel( playerScore + " score", MainActivity.GAME_WIDTH / 2, 520);
-        scoreLabel.setSize(130);
+        continueButton = new UIButton((int)((MainActivity.GAME_WIDTH/2) - 450),
+                                    420,
+                                    (int)((MainActivity.GAME_WIDTH/2) + 450),
+                                    540,
+                                    Assets.continueBackground);
+
         restartButton = new UIButton((int)((MainActivity.GAME_WIDTH/2) - 450),
                 530,
                 (int)((MainActivity.GAME_WIDTH/2) + 450),
@@ -47,25 +40,30 @@ public class GameOverState extends State {
 
     @Override
     public void render(Painter g) {
-        g.drawImage(Assets.gameOverBackgroundDialog,
+        g.drawImage(Assets.pauseBackgroundDialog,
                 (MainActivity.GAME_WIDTH/2) - 700,
                 (MainActivity.GAME_HEIGHT/2)  - 250,
                 1400,
                 500);
 
+        continueButton.render(g, false);
         restartButton.render(g, false);
         mainButton.render(g, false);
-        scoreLabel.render(g);
     }
 
     @Override
     public boolean onTouch(MotionEvent e, int scaledX, int scaledY) {
         if (e.getAction() == MotionEvent.ACTION_DOWN) {
+            continueButton.onTouchDown(scaledX, scaledY);
             restartButton.onTouchDown(scaledX, scaledY);
             mainButton.onTouchDown(scaledX, scaledY);
         }
 
         if (e.getAction() == MotionEvent.ACTION_UP) {
+            if (continueButton.isPressed(scaledX, scaledY)) {
+                restartButton.cancel();
+                setResumeGame();
+            }
 
             if (restartButton.isPressed(scaledX, scaledY)) {
                 restartButton.cancel();
@@ -81,13 +79,25 @@ public class GameOverState extends State {
     }
 
     @Override
-    public void onPause() {
+    public void load() {
+
+    }
+
+    @Override
+    public void unload() {
 
     }
 
     @Override
     public void onResume() {
-
+        super.onResume();
     }
-
 }
+
+
+
+
+
+
+
+

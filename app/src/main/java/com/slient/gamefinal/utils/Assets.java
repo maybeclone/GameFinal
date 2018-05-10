@@ -13,6 +13,8 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 
+import com.slient.gamefinal.animation.Frame;
+import com.slient.gamefinal.animation.LoopingAnimation;
 import com.slient.gamefinal.main.MainActivity;
 
 import java.io.IOException;
@@ -35,8 +37,17 @@ public class Assets {
     public static Bitmap mainGameBackground;
     public static Bitmap barImpedimentBackground;
     public static Bitmap dialogBackground;
-    public static Bitmap settingBackgound;
-    public static Bitmap highscoreBackgroun;
+    public static Bitmap settingBackground;
+    public static Bitmap highscoreBackground;
+    public static Bitmap pauseBackground;
+    public static Bitmap logoBackground;
+    public static Bitmap pauseBackgroundDialog;
+    public static Bitmap gameOverBackgroundDialog;
+    public static Bitmap continueBackground;
+    public static Bitmap mainMenuBackground;
+    public static Bitmap restartMenuBackground;
+
+    public static LoopingAnimation loopingAnimation;
 
     public static Typeface typeface;
 
@@ -63,14 +74,28 @@ public class Assets {
 
         bitmapCharacterJump = splitBitmapFromSpriteMap("character_sprite.png", true, 8);
 
-        Assets.menuBackground = Assets.loadBitmap("menu_background.jpg", true);
+        Assets.menuBackground = Assets.loadBitmap("background_menu.png", true);
         Assets.playBitmap = Assets.loadBitmap("play_button.png", true);
-        Assets.settingBackgound = Assets.loadBitmap("play_background.png", true);
-        Assets.highscoreBackgroun = Assets.loadBitmap("highscore_backgound.png", true);
+        Assets.settingBackground = Assets.loadBitmap("settings_button.png", true);
+        Assets.highscoreBackground = Assets.loadBitmap("highscore_button.png", true);
         Assets.mainGameBackground = Assets.loadBitmap("maingame_background.png", true);
         Assets.barImpedimentBackground = Assets.loadBitmap("bar.png", true);
+        Assets.pauseBackground = Assets.loadBitmap("pause_button.png", true);
         Assets.typeface = Typeface.create( Typeface.createFromAsset(MainActivity.assets, "fonts/font.TTF"), Typeface.BOLD);
         Assets.dialogBackground = Assets.loadBitmap("background_dialog.png", true);
+        Assets.pauseBackgroundDialog = Assets.loadBitmap("pause_background_dialog.png", true);
+        Assets.gameOverBackgroundDialog = Assets.loadBitmap("gameover_background_dialog.png", true);
+        Assets.logoBackground = Assets.loadBitmap("logo_game.png", true);
+        Assets.continueBackground = Assets.loadBitmap("continue_button.png", true);
+        Assets.restartMenuBackground = Assets.loadBitmap("restart_button.png", true);
+        Assets.mainMenuBackground = Assets.loadBitmap("main_button.png", true);
+
+        List<Frame> frames = new ArrayList<>();
+        for(Bitmap bitmap : bitmapCharacterJump){
+            frames.add(new Frame(bitmap, 0.1));
+        }
+
+        loopingAnimation = new LoopingAnimation(true, frames);
     }
 
     public static List<Bitmap> splitBitmapFromSpriteMap(String filename, boolean transparency, int qty){

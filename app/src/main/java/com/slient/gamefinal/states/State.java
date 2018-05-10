@@ -13,6 +13,13 @@ public abstract class State {
     public void setCurrentState(State newState) {
         MainActivity.sGame.setCurrentState(newState);
     }
+    public void setPauseGame() {
+        MainActivity.sGame.setPause();
+    }
+
+    public void setResumeGame(){
+        MainActivity.sGame.setResume();
+    }
 
     public abstract void init();
 
