@@ -1,6 +1,10 @@
 package com.slient.gamefinal.states;
 
 import android.graphics.Rect;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -9,21 +13,25 @@ import com.slient.gamefinal.models.Bar;
 import com.slient.gamefinal.models.Character;
 import com.slient.gamefinal.models.GameBackground;
 import com.slient.gamefinal.models.Player;
+import com.slient.gamefinal.ui.UILabel;
 import com.slient.gamefinal.utils.Assets;
 import com.slient.gamefinal.utils.Painter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.StatementEventListener;
+
 /**
  * Created by silent on 5/8/2018.
  */
-public class PlayState extends State {
+public class PlayState extends State implements SensorEventListener {
 
     private int score;
     private List<Bar> bars;
     private Player player;
     private GameBackground gameBackground;
+    private UILabel scoreLabel;
 
     private Character character;
 
@@ -31,23 +39,24 @@ public class PlayState extends State {
     public void init() {
         score = 0;
         bars = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 3; i++) {
             Bar bar = new Bar(500, 50, i);
             bars.add(bar);
         }
-        Log.d("TRUNG", bars.get(0).getX() + ", " + bars.get(0).getY());
         Bar barTemp = bars.get(bars.size() - 1);
-        character = new Character(Assets.bitmapCharacterJump, barTemp.getX() + barTemp.getWidth() / 2, barTemp.getY());
+        barTemp.setPassed(true);
+        character = new Character(Assets.bitmapCharacterJump, barTemp.getX() + barTemp.getWidth() / 2, barTemp.getY()-300);
         gameBackground = new GameBackground(MainActivity.GAME_WIDTH, MainActivity.GAME_HEIGHT);
+        MainActivity.mSensorManager.registerListener(this, MainActivity.mSensor, SensorManager.SENSOR_DELAY_GAME);
+        scoreLabel = new UILabel(score+"", MainActivity.GAME_WIDTH / 2 - 6, 100);
     }
 
     @Override
     public void update(float delta) {
         switch (character.update(delta, bars)){
-            case INSPACE:
-
-                break;
             case INTERSECT:
+                score++;
+            case INSPACE:
                 for (Bar bar : bars) {
                     bar.update(delta);
                 }
@@ -57,19 +66,18 @@ public class PlayState extends State {
                 setCurrentState(new GameOverState(0));
                 break;
         }
-
+        scoreLabel.setText(score+"");
 
     }
 
     @Override
     public void render(Painter g) {
         drawBackground(g);
-
         for (Bar bar : bars) {
             bar.render(g);
         }
         character.render(g);
-//        Assets.characterJumpAnimation.render(g, (int)player.getX(), (int) player.getY());
+        scoreLabel.render(g);
 
     }
 
@@ -98,4 +106,24 @@ public class PlayState extends State {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        character.updateX(event.values[0]);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 }

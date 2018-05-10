@@ -27,15 +27,14 @@ public class Character {
 
     private Rect rect;
     private Bar nowBar;
-    private Bar perviousBar;
 
     public Character(List<Bitmap> actionJump, float x, float y) {
         this.actionJump = actionJump;
         this.x = x;
         this.y = y;
         currentBitmapIndex = 0;
-        rect = new Rect((int) x, (int) y, (int) x+actionJump.get(0).getWidth(),
-                (int) y+actionJump.get(0).getWidth());
+        rect = new Rect((int) x, (int) y, (int) x + actionJump.get(0).getWidth(),
+                (int) y + actionJump.get(0).getWidth());
     }
 
     public CharacterStatus update(float delta, List<Bar> bars) {
@@ -44,9 +43,10 @@ public class Character {
             y -= 100;
             velY = JUMP_VELOCITY;
             updateRect();
-            if(!nowBar.equals(perviousBar)){
+            if(!nowBar.isPassed()) {
                 return CharacterStatus.INTERSECT;
             }
+            nowBar.setPassed(true);
         } else {
             velY += ACCEL_GRAVITY * delta;
             float extra = velY * delta;
@@ -54,17 +54,18 @@ public class Character {
             updateIndexBitmapAction(extra);
             updateRect();
 
-            if(isGrounded()){
+            if (isGrounded()) {
                 return CharacterStatus.DIE;
             }
+            if (nowBar != null)
+                nowBar.setPassed(true);
         }
         return CharacterStatus.INSPACE;
     }
 
-    public boolean checkStandBar(List<Bar> bars){
-        for(Bar bar : bars){
-            if(getRect().intersect(bar.getRect())){
-                perviousBar = nowBar;
+    public boolean checkStandBar(List<Bar> bars) {
+        for (Bar bar : bars) {
+            if (getRect().intersect(bar.getRect())) {
                 nowBar = bar;
                 return true;
             }
@@ -73,20 +74,30 @@ public class Character {
     }
 
 
-    public void updateIndexBitmapAction(float extra){
-        if(extra > 0 && extra <= 10){
+    public void updateX(float delta) {
+        this.x += delta * (-10);
+        if (this.x < 0) {
+            this.x = MainActivity.GAME_WIDTH;
+        } else if (this.y > MainActivity.GAME_WIDTH) {
+            this.x = 0;
+        }
+    }
+
+
+    public void updateIndexBitmapAction(float extra) {
+        if (extra > 0 && extra <= 10) {
             currentBitmapIndex = 7;
-        } else if(extra <= 20){
+        } else if (extra <= 20) {
             currentBitmapIndex = 6;
-        } else if (extra <= 30){
+        } else if (extra <= 30) {
             currentBitmapIndex = 5;
-        } else if (extra <= 40){
+        } else if (extra <= 40) {
             currentBitmapIndex = 4;
-        } else if(extra > 40 || extra >-30){
+        } else if (extra > 40 || extra > -30) {
             currentBitmapIndex = 3;
-        } else if(extra > -20){
+        } else if (extra > -20) {
             currentBitmapIndex = 2;
-        } else if(extra > - 10){
+        } else if (extra > -10) {
             currentBitmapIndex = 1;
         } else {
             currentBitmapIndex = 0;
@@ -106,8 +117,8 @@ public class Character {
     }
 
     public void updateRect() {
-        rect.set((int) x, (int) y, (int) x+actionJump.get(0).getWidth(),
-                (int) y+actionJump.get(0).getWidth());
+        rect.set((int) x, (int) y, (int) x + actionJump.get(0).getWidth(),
+                (int) y + actionJump.get(0).getWidth());
     }
 
     public Rect getRect() {

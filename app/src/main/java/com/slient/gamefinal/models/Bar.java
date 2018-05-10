@@ -38,7 +38,7 @@ public class Bar {
         int gameH = MainActivity.GAME_HEIGHT;
         this.bar = Assets.barImpedimentBackground;
         this.x = RandomNumberGenerator.getRandIntBetween(0, gameW - width);
-        this.y = index * (gameH/7);
+        this.y = index * (gameH/3);
         this.rect = new Rect((int)x, (int)y, (int)x + width, (int)y + height);
     }
 
@@ -61,7 +61,6 @@ public class Bar {
             this.y = 0;
             isPassed = false;
         }
-
 
         updateRect();
     }

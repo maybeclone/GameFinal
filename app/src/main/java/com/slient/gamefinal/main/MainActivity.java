@@ -1,9 +1,14 @@
 package com.slient.gamefinal.main;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener2;
+import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String highScoreKey = "highScoreKey";
     private static int highScore;
 
+    public static SensorManager mSensorManager;
+    public static Sensor mSensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         prefs = getPreferences(Activity.MODE_PRIVATE);
         highScore = retrieveHighScore();
         assets = getAssets();
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sGame = new GameView(this, GAME_WIDTH, GAME_HEIGHT);
         setContentView(sGame);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -39,15 +48,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        sGame.onPause();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         sGame.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sGame.onPause();
     }
 
     public static void setHighScore(int highScore) {

@@ -5,6 +5,7 @@ import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Typeface;
 import android.graphics.drawable.PictureDrawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -12,8 +13,6 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 
-import com.slient.gamefinal.animation.Frame;
-import com.slient.gamefinal.animation.LoopingAnimation;
 import com.slient.gamefinal.main.MainActivity;
 
 import java.io.IOException;
@@ -35,10 +34,14 @@ public class Assets {
     public static Bitmap menuBackground;
     public static Bitmap mainGameBackground;
     public static Bitmap barImpedimentBackground;
+    public static Bitmap dialogBackground;
+    public static Bitmap settingBackgound;
+    public static Bitmap highscoreBackgroun;
 
-    public static LoopingAnimation characterJumpAnimation;
+    public static Typeface typeface;
 
-    public static Bitmap tapToPlayBitmap;
+
+    public static Bitmap playBitmap;
 
     public static void onPause() {
         if(soundPool != null) {
@@ -59,15 +62,15 @@ public class Assets {
     public static void loadResource(){
 
         bitmapCharacterJump = splitBitmapFromSpriteMap("character_sprite.png", true, 8);
-        List<Frame> frameList = new ArrayList<>();
-        for(Bitmap b : bitmapCharacterJump){
-            frameList.add(new Frame(b, 0.15));
-        }
-        characterJumpAnimation = new LoopingAnimation(true, frameList);
+
         Assets.menuBackground = Assets.loadBitmap("menu_background.jpg", true);
-        Assets.tapToPlayBitmap = Assets.loadBitmap("tap_to_play.png", true);
+        Assets.playBitmap = Assets.loadBitmap("play_button.png", true);
+        Assets.settingBackgound = Assets.loadBitmap("play_background.png", true);
+        Assets.highscoreBackgroun = Assets.loadBitmap("highscore_backgound.png", true);
         Assets.mainGameBackground = Assets.loadBitmap("maingame_background.png", true);
         Assets.barImpedimentBackground = Assets.loadBitmap("bar.png", true);
+        Assets.typeface = Typeface.create( Typeface.createFromAsset(MainActivity.assets, "fonts/font.TTF"), Typeface.BOLD);
+        Assets.dialogBackground = Assets.loadBitmap("background_dialog.png", true);
     }
 
     public static List<Bitmap> splitBitmapFromSpriteMap(String filename, boolean transparency, int qty){
@@ -78,7 +81,6 @@ public class Assets {
             e.printStackTrace();
         }
         BitmapFactory.Options options = new BitmapFactory.Options();
-        //  options.inDither = true;
         if (transparency) {
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         } else {

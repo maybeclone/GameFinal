@@ -15,7 +15,7 @@ import com.slient.gamefinal.utils.Painter;
 /**
  * Created by silent on 5/8/2018.
  */
-public class GameView extends SurfaceView implements Runnable {
+public class GameView extends SurfaceView implements Runnable  {
 
     public static int FPS = 60;
 

@@ -17,7 +17,7 @@ public class MenuState extends State{
 
     @Override
     public void init() {
-        playButton = new UIButton(450, 800, 1483, 930, Assets.tapToPlayBitmap);
+        playButton = new UIButton(450, 800, 1483, 930, Assets.playBitmap);
 
     }
 
