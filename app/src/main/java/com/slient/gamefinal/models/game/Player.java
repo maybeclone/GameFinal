@@ -1,4 +1,4 @@
-package com.slient.gamefinal.models;
+package com.slient.gamefinal.models.game;
 
 import android.graphics.Rect;
 import android.view.MotionEvent;

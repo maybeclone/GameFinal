@@ -1,8 +1,7 @@
-package com.slient.gamefinal.models;
+package com.slient.gamefinal.models.game;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.util.Log;
 
 import com.slient.gamefinal.main.MainActivity;
 import com.slient.gamefinal.utils.Painter;

@@ -11,70 +11,103 @@ import android.hardware.SensorEventListener2;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.slient.gamefinal.R;
+import com.slient.gamefinal.callbacks.FragmentCallback;
+import com.slient.gamefinal.config.Instance;
+import com.slient.gamefinal.fragments.GameFragment;
+import com.slient.gamefinal.fragments.HighScoreFragment;
+import com.slient.gamefinal.fragments.LoginFragment;
+import com.slient.gamefinal.fragments.RegisterFragment;
+import com.slient.gamefinal.fragments.SettingsFragment;
+import com.slient.gamefinal.models.account.User;
+import com.slient.gamefinal.server.ConfigServer;
+import com.slient.gamefinal.server.account.LoginPostUserAsyncTask;
+import com.slient.gamefinal.server.account.RegisterPostUserAsyncTask;
 import com.slient.gamefinal.utils.Assets;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentCallback {
 
     public static final int GAME_WIDTH = 1920;
     public static final int GAME_HEIGHT = 1080;
-    public static GameView sGame;
+
     public static AssetManager assets;
-    private static SharedPreferences prefs;
-    private static final String highScoreKey = "highScoreKey";
-    private static int highScore;
 
     public static SensorManager mSensorManager;
     public static Sensor mSensor;
 
+    private GameFragment gameFragment;
+    private LoginFragment loginFragment;
+    private RegisterFragment registerFragment;
+    private HighScoreFragment highScoreFragment;
+    private SettingsFragment settingsFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prefs = getPreferences(Activity.MODE_PRIVATE);
-        highScore = retrieveHighScore();
         assets = getAssets();
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sGame = new GameView(this, GAME_WIDTH, GAME_HEIGHT);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(sGame);
+        setContentView(R.layout.activity_main);
 
+        initFragment();
+        replaceLoginFragment();
+
+    }
+
+    public void initFragment(){
+        gameFragment = GameFragment.newInstance();
+        loginFragment = LoginFragment.newInstance();
+        registerFragment = RegisterFragment.newInstance();
+        highScoreFragment = HighScoreFragment.newInstance();
+        settingsFragment = SettingsFragment.newInstance();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        sGame.onResume();
+    public void replaceLoginFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, loginFragment, "Login")
+                .commit();
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        sGame.onPause();
+    public void replaceRegisterFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, registerFragment, "Register")
+                .addToBackStack(null)
+                .commit();
     }
 
-    public static void setHighScore(int highScore) {
-        MainActivity.highScore = highScore;
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(highScoreKey, highScore);
-        editor.commit();
+    @Override
+    public void replaceGameFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, gameFragment, "Game")
+                .commit();
     }
 
-    private int retrieveHighScore() {
-        return prefs.getInt(highScoreKey, 0);
+    @Override
+    public void replaceHighScoreFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, highScoreFragment, "HighScore")
+                .addToBackStack(null)
+                .commit();
     }
 
-    public static int getHighScore() {
-        return highScore;
+    @Override
+    public void replaceSettingsFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, settingsFragment, "Settings")
+                .addToBackStack(null)
+                .commit();
     }
-
 }

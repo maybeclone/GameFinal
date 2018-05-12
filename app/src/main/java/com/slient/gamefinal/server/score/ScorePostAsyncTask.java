@@ -1,56 +1,43 @@
-package com.n14dcpt048.moneylover.server;
+package com.slient.gamefinal.server.score;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.JsonWriter;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.n14dcpt048.moneylover.Instance;
-import com.n14dcpt048.moneylover.adapters.MoneyAdapter;
-import com.n14dcpt048.moneylover.models.Money;
-import com.n14dcpt048.moneylover.utils.JsonParserMoney;
+import com.slient.gamefinal.config.Instance;
+import com.slient.gamefinal.models.game.Score;
+import com.slient.gamefinal.server.ConfigServer;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Created by silent on 4/5/2018.
+ * Created by silent on 5/13/2018.
  */
-public class PostAsyncTask extends AsyncTask<String, Void, Integer> {
-
+public class ScorePostAsyncTask extends AsyncTask<String, Void, Integer> {
     private Context context;
     private ProgressDialog progressDialog;
-    private  Map<String, String> arguments;
-    private Money money;
+    private Map<String, String> arguments;
 
-    public PostAsyncTask(Context context, ProgressDialog progressDialog, Money money) {
+    public ScorePostAsyncTask(Context context, Score score) {
         this.context = context;
-        this.progressDialog = progressDialog;
-        this.money = money;
-        arguments = new HashMap<>();
-        arguments.put(JsonParserMoney.PARAM_MESSAGE, money.getMessage());
-        arguments.put(JsonParserMoney.PARAM_COST, money.getCost() + "");
-        arguments.put(JsonParserMoney.PARAM_TYPE, money.getType() + "");
-        arguments.put(JsonParserMoney.PARAM_DATE, money.getDateString());
+        this.progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Uploading...");
+        this.arguments = new HashMap<>();
+        this.arguments.put(ConfigServer.ARGU_USERNAME_SCORE, Instance.nowUser.username);
+        this.arguments.put(ConfigServer.ARGU_SCORE_SCORE, String.valueOf(score.score));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        this.arguments.put(ConfigServer.ARGU_DATETIME_SCORE, simpleDateFormat.format(score.dateTime));
     }
 
     @Override
@@ -79,13 +66,11 @@ public class PostAsyncTask extends AsyncTask<String, Void, Integer> {
             byte[] out = sj.toString().getBytes();
 
             httpURLConnection.setFixedLengthStreamingMode(out.length);
+            httpURLConnection.setRequestProperty("Authorization", "bearer "+ Instance.nowUser.accessToken);
             httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
             httpURLConnection.connect();
             OutputStream os = httpURLConnection.getOutputStream();
             os.write(out);
-
-            // get InputStream Money is returned to set id for filed money
-
             return httpURLConnection.getResponseCode();
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -100,13 +85,12 @@ public class PostAsyncTask extends AsyncTask<String, Void, Integer> {
     }
 
     @Override
-    protected void onPostExecute(Integer respone) {
+    protected void onPostExecute(Integer stt) {
         progressDialog.dismiss();
-        if (respone == HttpsURLConnection.HTTP_CREATED) {
-            Instance.moneyList.add(money);
-            Toast.makeText(context, "Add successful", Toast.LENGTH_SHORT).show();
+        if(stt == HttpURLConnection.HTTP_OK){
+            Log.d("TRUNG", "Uploading score successful");
         } else {
-            Toast.makeText(context, "There are some errors. Please try again", Toast.LENGTH_SHORT).show();
+            Log.d("TRUNG", "Uploading score ERROR "+stt);
         }
     }
 }

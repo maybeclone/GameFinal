@@ -2,6 +2,7 @@ package com.slient.gamefinal.states;
 
 import android.view.MotionEvent;
 
+import com.slient.gamefinal.fragments.GameFragment;
 import com.slient.gamefinal.main.MainActivity;
 import com.slient.gamefinal.ui.UIButton;
 import com.slient.gamefinal.ui.UILabel;
@@ -18,13 +19,16 @@ public class GameOverState extends State {
     private UIButton restartButton;
     private UIButton mainButton;
     private UILabel scoreLabel;
+    private int score;
 
     public GameOverState(int playerScore) {
+        this.score = playerScore;
         this.playerScore = "" + playerScore;
     }
 
     @Override
     public void init() {
+        GameFragment.sGame.uploadScore(score);
         scoreLabel = new UILabel( playerScore + " score", MainActivity.GAME_WIDTH / 2, 520);
         scoreLabel.setSize(130);
         restartButton = new UIButton((int)((MainActivity.GAME_WIDTH/2) - 450),
@@ -38,6 +42,7 @@ public class GameOverState extends State {
                 (int)((MainActivity.GAME_WIDTH/2) + 440),
                 760,
                 Assets.mainMenuBackground);
+
     }
 
     @Override

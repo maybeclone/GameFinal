@@ -1,7 +1,9 @@
 package com.slient.gamefinal.states;
 
+import android.content.Context;
 import android.view.MotionEvent;
 
+import com.slient.gamefinal.fragments.GameFragment;
 import com.slient.gamefinal.main.MainActivity;
 import com.slient.gamefinal.utils.Painter;
 
@@ -11,14 +13,14 @@ import com.slient.gamefinal.utils.Painter;
 public abstract class State {
 
     public void setCurrentState(State newState) {
-        MainActivity.sGame.setCurrentState(newState);
+        GameFragment.sGame.setCurrentState(newState);
     }
     public void setPauseGame() {
-        MainActivity.sGame.setPause();
+        GameFragment.sGame.setPause();
     }
 
     public void setResumeGame(){
-        MainActivity.sGame.setResume();
+        GameFragment.sGame.setResume();
     }
 
     public abstract void init();

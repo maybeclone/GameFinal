@@ -13,27 +13,30 @@
     </android.support.v7.widget.Toolbar>
 
     <EditText
-        android:id="@+id/emailEditText"
+        android:id="@+id/oldPasswordEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress"/>
+        android:inputType="textPassword"
+        android:hint="Old Password"/>
+
     <EditText
-        android:id="@+id/passwordEditText"
+        android:id="@+id/newPasswordEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"/>
+        android:inputType="textPassword"
+        android:hint="New Password"/>
+
     <EditText
-        android:id="@+id/passwordAgainEditText"
+        android:id="@+id/newPasswordAgainEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password Again"
-        android:inputType="textPassword"/>
+        android:inputType="textPassword"
+        android:hint="New Password Again"/>
+
     <Button
-        android:id="@+id/registerButton"
+        android:id="@+id/changeButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register"/>
+        android:text="Change Password"/>
 
 </LinearLayout>

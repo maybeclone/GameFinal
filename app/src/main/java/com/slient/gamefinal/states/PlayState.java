@@ -5,14 +5,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.slient.gamefinal.main.MainActivity;
-import com.slient.gamefinal.models.Bar;
-import com.slient.gamefinal.models.Character;
-import com.slient.gamefinal.models.GameBackground;
-import com.slient.gamefinal.models.Player;
+import com.slient.gamefinal.models.game.Bar;
+import com.slient.gamefinal.models.game.Character;
+import com.slient.gamefinal.models.game.GameBackground;
+import com.slient.gamefinal.models.game.Player;
 import com.slient.gamefinal.ui.UIButton;
 import com.slient.gamefinal.ui.UILabel;
 import com.slient.gamefinal.utils.Assets;
@@ -20,8 +19,6 @@ import com.slient.gamefinal.utils.Painter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.StatementEventListener;
 
 /**
  * Created by silent on 5/8/2018.

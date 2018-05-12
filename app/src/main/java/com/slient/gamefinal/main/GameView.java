@@ -4,9 +4,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.os.Looper;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.slient.gamefinal.models.game.Score;
+import com.slient.gamefinal.server.ConfigServer;
+import com.slient.gamefinal.server.score.ScorePostAsyncTask;
 import com.slient.gamefinal.states.LoadMenuState;
 import com.slient.gamefinal.states.PauseState;
 import com.slient.gamefinal.states.State;
@@ -87,7 +91,6 @@ public class GameView extends SurfaceView implements Runnable {
         long updateDurationMillis = 0;
         long sleepDurationMillis = 0;
 
-        //Game loop
         while (running) {
             long beforeUpdateRender = System.nanoTime();
             long deltaMillis = sleepDurationMillis + updateDurationMillis;
@@ -165,6 +168,19 @@ public class GameView extends SurfaceView implements Runnable {
             currentState = previousState;
             inputHandler.setCurrentState(currentState);
         }
+    }
+
+    public void initHighScore(){
+        ((MainActivity) getContext()).replaceHighScoreFragment();
+    }
+
+    public void initAccount(){
+        ((MainActivity) getContext()).replaceSettingsFragment();
+    }
+
+    public void uploadScore(int score){
+        Looper.prepare();
+        new ScorePostAsyncTask(getContext(), new Score(score)).execute(ConfigServer.SCORE_URL);
     }
 
 }

@@ -5,43 +5,39 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-
+import com.slient.gamefinal.config.Instance;
 import com.slient.gamefinal.main.MainActivity;
 import com.slient.gamefinal.models.account.User;
 import com.slient.gamefinal.server.ConfigServer;
 
-import org.json.JSONException;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Created by silent on 4/5/2018.
+ * Created by silent on 5/13/2018.
  */
-public class RegisterPostUserAsyncTask extends AsyncTask<String, Void, Integer> {
-
+public class ChangePasswordPostAsyncTask extends AsyncTask<String, Void, Integer> {
     private Context context;
     private ProgressDialog progressDialog;
     private Map<String, String> arguments;
 
-    public RegisterPostUserAsyncTask(Context context, User user) {
+    public ChangePasswordPostAsyncTask(Context context, String oldPassword, String newPassword) {
         this.context = context;
         this.progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Creating a account...");
+        progressDialog.setMessage("Change the password...");
         this.arguments = new HashMap<>();
-        this.arguments.put(ConfigServer.ARGU_USERNAME, user.username);
-        this.arguments.put(ConfigServer.ARGU_PASSWORD, user.password);
+        this.arguments.put(ConfigServer.ARGU_USERNAME_SCORE, Instance.nowUser.username);
+        this.arguments.put(ConfigServer.ARGU_OLD_PASSWORD_PASS, oldPassword);
+        this.arguments.put(ConfigServer.ARGU_NEW_PASSWORD, newPassword);
     }
 
     @Override
@@ -70,6 +66,7 @@ public class RegisterPostUserAsyncTask extends AsyncTask<String, Void, Integer> 
             byte[] out = sj.toString().getBytes();
 
             httpURLConnection.setFixedLengthStreamingMode(out.length);
+            httpURLConnection.setRequestProperty("Authorization", "bearer "+ Instance.nowUser.accessToken);
             httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
             httpURLConnection.connect();
             OutputStream os = httpURLConnection.getOutputStream();
@@ -92,7 +89,7 @@ public class RegisterPostUserAsyncTask extends AsyncTask<String, Void, Integer> 
     protected void onPostExecute(Integer stt) {
         progressDialog.dismiss();
         if(stt == HttpURLConnection.HTTP_OK){
-            Toast.makeText(context, "Create a account success", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Change the password success", Toast.LENGTH_SHORT).show();
             ((MainActivity) context).replaceLoginFragment();
         } else {
             Toast.makeText(context, "There are some errors", Toast.LENGTH_SHORT).show();

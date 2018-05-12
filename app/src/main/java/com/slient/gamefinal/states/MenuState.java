@@ -1,7 +1,9 @@
 package com.slient.gamefinal.states;
 
+import android.util.Log;
 import android.view.MotionEvent;
 
+import com.slient.gamefinal.fragments.GameFragment;
 import com.slient.gamefinal.main.MainActivity;
 import com.slient.gamefinal.utils.Assets;
 import com.slient.gamefinal.utils.Painter;
@@ -44,12 +46,22 @@ public class MenuState extends State{
 
         if (e.getAction() == MotionEvent.ACTION_DOWN) {
             playButton.onTouchDown(scaledX, scaledY);
+            highScoreButton.onTouchDown(scaledX, scaledY);
+            settingsButton.onTouchDown(scaledX, scaledY);
         }
 
         if (e.getAction() == MotionEvent.ACTION_UP) {
             if (playButton.isPressed(scaledX, scaledY)) {
                 playButton.cancel();
                 setCurrentState(new PlayState());
+            }
+            if(highScoreButton.isPressed(scaledX, scaledY)){
+                highScoreButton.cancel();
+                GameFragment.sGame.initHighScore();
+            }
+            if(settingsButton.isPressed(scaledX, scaledY)){
+                settingsButton.cancel();
+                GameFragment.sGame.initAccount();
             }
         }
         return true;
